@@ -12,11 +12,18 @@ void setup(){
 }
 
 void loop(){
-    // Serial.println(drive.getRPM());
-
-    steering.set(0);
-    drive.setSpeed(100);
-    delay(1000);
+    drive.setSpeed(30);
+    for(int i=0; i<=40; i++){
+        steering.set(i);
+        delay(50);
+    }
     drive.stop();
-    delay(1000);
+    delay(2000);
+    drive.setSpeed(-30);
+    for(int i=0; i>=-40; i-=1){
+        steering.set(i);
+        delay(50);
+    }
+    drive.stop();
+    delay(2000);
 }

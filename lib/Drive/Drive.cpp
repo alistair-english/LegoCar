@@ -23,10 +23,14 @@ void Drive::setSpeed(int speed){ // speed is from -100 to 100
 
 void Drive::brake(int amount){ // amount is 0-100 of how much the car reverses
     // kinda asynchronous slowing of the car, must be called repeatedly to work
-    if(getRPM() != 0){
+    if((getRPM() > 0 && !currDir) || getRPM() < 0 && currDir){
         digitalWrite(Brk_Pin, LOW);
         digitalWrite(Dir_Pin, !currDir);
         analogWrite(PWM_Pin, amount);
+    } else {
+        digitalWrite(Brk_Pin, HIGH);
+        digitalWrite(Dir_Pin, currDir);
+        analogWrite(PWM_Pin, 0);
     }
 }
 
@@ -36,7 +40,7 @@ void Drive::stop(){
     digitalWrite(Dir_Pin, !currDir);
     analogWrite(PWM_Pin, currPWM);
 
-    while(getRPM() > 0);
+    while((getRPM() > 0 && !currDir) || getRPM() < 0 && currDir);
 
     digitalWrite(Brk_Pin, HIGH);
     digitalWrite(Dir_Pin, currDir);
