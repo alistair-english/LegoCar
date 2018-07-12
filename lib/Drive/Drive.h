@@ -2,6 +2,7 @@
 #define Drive_h
 
 #include <Common.h>
+#define ENCODER_OPTIMIZE_INTERRUPTS
 #include <Encoder.h>
 
 class Drive {
