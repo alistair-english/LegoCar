@@ -17,8 +17,6 @@ void Drive::setSpeed(int speed){ // speed is from -100 to 100
     analogWrite(PWM_Pin, abs(speed));
     currDir = speed < 0;
     currPWM = abs(speed);
-
-    Serial.println(driveEncoder.read());
 }
 
 void Drive::brake(){
@@ -35,7 +33,14 @@ void Drive::brake(){
 
 double Drive::getRPM(){
     unsigned long currTime = millis();
-    unsigned long timeDiff = (currTime - encLastCall)/60000; // in minutes
-    long rotations = driveEncoder.read()/720; // div by 360*2
-    return rotations/timeDiff;
+    double timeDiff = (currTime - encLastCall)/60000.0; // in minutes
+    if(currTime - encLastCall < 100){
+        return lastRPM;
+    }
+
+    double rotations = (double)driveEncoder.read()/720.0; // div by 360*2
+    encLastCall = currTime;
+    driveEncoder.write(0);
+    lastRPM = rotations/timeDiff;
+    return lastRPM;
 }

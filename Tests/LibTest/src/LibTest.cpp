@@ -15,4 +15,7 @@ void setup(){
 void loop(){
     steering.set(0);
     drive.setSpeed(50);
+    // Serial.printf("%f\n", drive.getRPM());
+    Serial.println(drive.getRPM());
+    // drive.getRPM();
 }

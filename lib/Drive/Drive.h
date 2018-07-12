@@ -15,6 +15,7 @@ private:
     bool currDir; // false = forwards, true = backwards
     int currPWM;
     unsigned long encLastCall = 0;
+    double lastRPM = 0;
 
     Encoder driveEncoder = Encoder(Enc_1, Enc_2);
 
