@@ -11,6 +11,7 @@ public:
 
 private:
     Servo steerServo;
+    int offset = 0;
 
 };
 
