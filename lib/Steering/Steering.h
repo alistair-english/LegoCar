@@ -6,7 +6,7 @@
 
 class Steering {
 public:
-    Steering(int pin);
+    Steering();
     void set(int steer);
 
 private:

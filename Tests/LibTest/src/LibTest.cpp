@@ -2,8 +2,8 @@
 #include <Steering.h>
 #include <Drive.h>
 
-Steering steering(Steering_Pin);
-Drive drive(PWM_Pin, Dir_Pin, Brk_Pin, Enc_1, Enc_2);
+Steering steering;
+Drive drive;
 
 void setup(){
     Serial.begin(9600);

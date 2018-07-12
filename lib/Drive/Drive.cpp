@@ -1,26 +1,20 @@
 #include <Drive.h>
 
-Drive::Drive(int PWM_, int Dir_, int Brk_, int enc1_, int enc2_){
-    PWM = PWM_;
-    Dir = Dir_;
-    Brk = Brk_;
+Drive::Drive(){
+    pinMode(PWM_Pin, OUTPUT);
+    pinMode(Dir_Pin, OUTPUT);
+    pinMode(Brk_Pin, OUTPUT);
 
-    pinMode(PWM, OUTPUT);
-    pinMode(Dir, OUTPUT);
-    pinMode(Brk, OUTPUT);
-
-    analogWrite(PWM, 0);
-    digitalWrite(Dir, LOW);
-    digitalWrite(Brk, HIGH);
-
-    // driveEncoder = Encoder(enc1_, enc2_);
+    analogWrite(PWM_Pin, 0);
+    digitalWrite(Dir_Pin, LOW);
+    digitalWrite(Brk_Pin, HIGH);
 }
 
 void Drive::setSpeed(int speed){ // speed is from -100 to 100
     speed = map(constrain(speed, -100, 100), -100, 100, -255, 255);
-    digitalWrite(Brk, speed == 0);
-    digitalWrite(Dir, speed < 0); // HIGH is backwards
-    analogWrite(PWM, abs(speed));
+    digitalWrite(Brk_Pin, speed == 0);
+    digitalWrite(Dir_Pin, speed < 0); // HIGH is backwards
+    analogWrite(PWM_Pin, abs(speed));
     currDir = speed < 0;
     currPWM = abs(speed);
 
@@ -28,15 +22,15 @@ void Drive::setSpeed(int speed){ // speed is from -100 to 100
 }
 
 void Drive::brake(){
-    digitalWrite(Brk, LOW);
-    digitalWrite(Dir, !currDir);
-    analogWrite(PWM, currPWM);
+    digitalWrite(Brk_Pin, LOW);
+    digitalWrite(Dir_Pin, !currDir);
+    analogWrite(PWM_Pin, currPWM);
 
     delay(50);
 
-    digitalWrite(Brk, HIGH);
-    digitalWrite(Dir, currDir);
-    analogWrite(PWM, 0);
+    digitalWrite(Brk_Pin, HIGH);
+    digitalWrite(Dir_Pin, currDir);
+    analogWrite(PWM_Pin, 0);
 }
 
 double Drive::getRPM(){

@@ -1,7 +1,7 @@
 #include <Steering.h>
 
-Steering::Steering(int pin){
-    steerServo.attach(pin);
+Steering::Steering(){
+    steerServo.attach(Steering_Pin);
 }
 
 void Steering::set(int steer){ // steer is from -40 to 40 (left to right)
