@@ -8,7 +8,8 @@ class Drive {
 public:
     Drive();
     void setSpeed(int speed);
-    void brake();
+    void brake(int amount);
+    void stop();
     double getRPM();
 
 private:

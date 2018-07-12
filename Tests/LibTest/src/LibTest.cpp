@@ -11,11 +11,12 @@ void setup(){
     digitalWrite(13, HIGH);
 }
 
-
 void loop(){
+    // Serial.println(drive.getRPM());
+
     steering.set(0);
-    drive.setSpeed(50);
-    // Serial.printf("%f\n", drive.getRPM());
-    Serial.println(drive.getRPM());
-    // drive.getRPM();
+    drive.setSpeed(100);
+    delay(1000);
+    drive.stop();
+    delay(1000);
 }
