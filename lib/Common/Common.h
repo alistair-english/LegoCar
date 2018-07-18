@@ -3,5 +3,6 @@
 
 #include <Arduino.h>
 #include <Pins.h>
+#include <Config.h>
 
 #endif

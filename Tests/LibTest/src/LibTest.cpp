@@ -33,6 +33,13 @@ void loop(){
     // delay(1000);
     // steering.set(-30);
     // delay(1000);
-    drive.setSpeed(30);
+    if(millis() < 3000){
+        drive.setRPM(250);
+    } else if(millis() < 5500) {
+        drive.setRPM(-250);
+    } else {
+        drive.setRPM(0);
+    }
     steering.set(0);
+    drive.call();
 }

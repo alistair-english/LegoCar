@@ -10,37 +10,34 @@ Drive::Drive(){
     digitalWrite(Brk_Pin, HIGH);
 }
 
-void Drive::setSpeed(int speed){ // speed is from -100 to 100
-    speed = map(constrain(speed, -100, 100), -100, 100, -255, 255);
-    digitalWrite(Brk_Pin, speed == 0);
-    digitalWrite(Dir_Pin, speed < 0); // HIGH is backwards
-    analogWrite(PWM_Pin, abs(speed));
-    if(speed != 0){
-        currDir = speed < 0;
-        currPWM = abs(speed);
+void Drive::call(){
+    double rpm = getRPM();
+    double val = rpmPID.update(abs(rpm) < 5 ? 0 : rpm, targetRPM);
+    toWrite = constrain(toWrite+val, -255, 255);
+
+    // Serial.printf("%f %f %f\n", val, toWrite, rpm);
+
+    digitalWrite(Brk_Pin, toWrite == 0);
+    digitalWrite(Dir_Pin, toWrite < 0); // HIGH is backwards
+    analogWrite(PWM_Pin, abs(toWrite));
+
+    if(toWrite != 0){
+        currDir = toWrite < 0;
+        currPWM = abs(toWrite);
     }
 }
 
-void Drive::brake(int amount){ // amount is 0-100 of how much the car reverses
-    // kinda asynchronous slowing of the car, must be called repeatedly to work
-    if((getRPM() > 0 && !currDir) || getRPM() < 0 && currDir){
-        digitalWrite(Brk_Pin, LOW);
-        digitalWrite(Dir_Pin, !currDir);
-        analogWrite(PWM_Pin, amount);
-    } else {
-        digitalWrite(Brk_Pin, HIGH);
-        digitalWrite(Dir_Pin, currDir);
-        analogWrite(PWM_Pin, 0);
-    }
+void Drive::setRPM(int rpm){
+    targetRPM = rpm;
 }
 
 void Drive::stop(){
     // will halt the program until the car is stopped, only called once
-    digitalWrite(Brk_Pin, LOW);
-    digitalWrite(Dir_Pin, !currDir);
-    analogWrite(PWM_Pin, currPWM);
-
-    while((getRPM() > 0 && !currDir) || getRPM() < 0 && currDir);
+    while((getRPM() > 0 && !currDir) || getRPM() < 0 && currDir){
+        digitalWrite(Brk_Pin, LOW);
+        digitalWrite(Dir_Pin, !currDir);
+        analogWrite(PWM_Pin, currPWM);
+    }
 
     digitalWrite(Brk_Pin, HIGH);
     digitalWrite(Dir_Pin, currDir);
@@ -59,4 +56,10 @@ double Drive::getRPM(){
     driveEncoder.write(0);
     lastRPM = rotations/timeDiff;
     return lastRPM;
+}
+
+void setPWM(int pwm){ // pwm is 0-255
+    digitalWrite(Brk_Pin, pwm == 0);
+    digitalWrite(Dir_Pin, pwm < 0); // HIGH is backwards
+    analogWrite(PWM_Pin, abs(pwm));
 }
